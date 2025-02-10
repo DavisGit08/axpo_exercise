@@ -18,5 +18,8 @@
   "homepage": "https://github.com/DavisGit08/axpo_exercise#readme",
   "devDependencies": {
     "@playwright/test": "^1.50.1"
+  },
+  "dependencies": {
+    "axios": "^1.7.9"
   }
 }
