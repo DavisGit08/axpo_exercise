@@ -17,6 +17,18 @@ export default class AntartidaApis{
         }catch(err){console.log(err); throw new Error('Error: ' + err);}
     }
 
+    static async getAntartidaErrorCodes(fechaini, fechafin, estacion, apiKey){
+        let RESPONSE = '';
+        try{
+            RESPONSE = await axios.get(data.ENDPOINT + `/fechaini/${fechaini}/fechafin/${fechafin}/estacion/${estacion}`,{
+                headers:{
+                    'accept': 'application/json',
+                    'api_key': apiKey
+                }
+            });
+        }catch(err){return err.response}
+    }
+
     static async getJson(url){
         try{
             const RESPONSE = await axios.get(url,{
