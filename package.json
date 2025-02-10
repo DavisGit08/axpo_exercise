@@ -1,0 +1,22 @@
+{
+  "name": "axpo_exercise",
+  "version": "1.0.0",
+  "description": "Playwright exercise for Axpo interview",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavisGit08/axpo_exercise.git"
+  },
+  "author": "David",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DavisGit08/axpo_exercise/issues"
+  },
+  "homepage": "https://github.com/DavisGit08/axpo_exercise#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.50.1"
+  }
+}
