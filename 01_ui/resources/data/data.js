@@ -2,5 +2,6 @@
 
 export default class Data{
     static URL = 'https://opendata.aemet.es/centrodedescargas/inicio';
-    static EMAIL_API_KEY = 'e46cf67ee4b1ee2f5dd7c8f21c64c8a1c486510cf70d387dc8a5ce8f41b938ca';
+    static EMAIL_API_KEY = 'bc13a8d2415d60fc85769c312ebb949159effd27d3f06e68a55d464aeff3e168';
+    static EMAIL = "be02d175-4bcf-4804-bcf0-3d5736b75d50@mailslurp.biz";
 }

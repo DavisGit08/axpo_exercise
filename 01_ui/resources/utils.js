@@ -1,6 +1,6 @@
 // Utilities to help on UI
 import { MailSlurp } from "mailslurp-client";
-import Data from "./data/data";
+import data from "./data/data";
 import axios from "axios";
 
 async function validateCaptcha(page){
@@ -34,13 +34,14 @@ async function validateCaptcha(page){
 
 }
 
-async function createEmail() {
+async function retrieveInbox() {
     try {
-        const mailslurp = new MailSlurp({ apiKey: Data.EMAIL_API_KEY });
-        const inbox = await mailslurp.inboxController.createInboxWithDefaults();
+        const mailslurp = new MailSlurp({ apiKey: data.EMAIL_API_KEY });
+        const inboxes = await mailslurp.getAllInboxes();
+        const inbox = inboxes.content.find(inbox => inbox.emailAddress === data.EMAIL);
         return inbox;
     } catch (err) {
-        console.error("❌ Error creating inbox:", err.message); throw new Error("Error creating inbox with MailSlurp.");}
+        console.error("❌ Error retrieving inbox:", err.message); throw new Error("Error retrieving inbox.");}
 }
 
 async function retrieveApiKeyFromEmail(inbox) {
@@ -54,7 +55,7 @@ async function retrieveApiKeyFromEmail(inbox) {
 }
 
 async function retrieveBodyFromEmail(inbox) {
-    const mailslurp = new MailSlurp({ apiKey: Data.EMAIL_API_KEY });
+    const mailslurp = new MailSlurp({ apiKey: data.EMAIL_API_KEY });
     let email = null;
     const timeout = Date.now() + 80000;
     while (!email && Date.now() < timeout) {
@@ -99,4 +100,4 @@ function extractApiKey(text){
 }
 
 
-module.exports = {validateCaptcha, createEmail, retrieveApiKeyFromEmail, retrieveBodyFromEmail, createApiKey, extractApiKey};
+module.exports = {validateCaptcha, retrieveInbox, retrieveApiKeyFromEmail, retrieveBodyFromEmail, createApiKey, extractApiKey};

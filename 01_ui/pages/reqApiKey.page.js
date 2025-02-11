@@ -13,7 +13,7 @@ export default class ReqApiPage{
     //----------------------------- Components from ReqApiPage
 
     static async userRegistration(page){
-        const EMAIL = await utils.createEmail();
+        const EMAIL = await utils.retrieveInbox();
         await this.INPUT_EMAIL(page).fill(EMAIL.emailAddress);
         await utils.validateCaptcha(page);
         await this.BUTTON_SUBMIT(page).click();
