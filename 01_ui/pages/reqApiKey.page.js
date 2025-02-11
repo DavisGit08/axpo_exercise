@@ -15,9 +15,9 @@ export default class ReqApiPage{
     static async userRegistration(page){
         const EMAIL = await utils.createEmail();
         await this.INPUT_EMAIL(page).fill(EMAIL.emailAddress);
-        //await utils.validateCaptcha(page);
+        await utils.validateCaptcha(page);
         await this.BUTTON_SUBMIT(page).click();
-        //await expect(this.LABEL_CONFIRMED(page)).toBeVisible();
+        
         console.log('Clicked over "Enviar" button');
         const API_KEY = await utils.retrieveApiKeyFromEmail(EMAIL);
         console.log(`✅ Api Key retrieved from email: ${API_KEY[1]}`);
