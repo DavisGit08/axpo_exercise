@@ -1,3 +1,6 @@
 // Data to be used for UI tests
 
-const API_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkYXZpZC5wZXJlei5jYW1wb3M4MkBnbWFpbC5jb20iLCJqdGkiOiJlZDgyNTI3MC03YzhmLTQ0Y2YtOTdkYS05YTRiZmVhODA1MGQiLCJpc3MiOiJBRU1FVCIsImlhdCI6MTczOTE5NTIyNCwidXNlcklkIjoiZWQ4MjUyNzAtN2M4Zi00NGNmLTk3ZGEtOWE0YmZlYTgwNTBkIiwicm9sZSI6IiJ9.bizoojJkulafRr1Cy_lb5b_uwC0cPiWDsGmORTNF1gI';
+export default class Data{
+    static URL = 'https://opendata.aemet.es/centrodedescargas/inicio';
+    static EMAIL_API_KEY = 'e46cf67ee4b1ee2f5dd7c8f21c64c8a1c486510cf70d387dc8a5ce8f41b938ca';
+}
