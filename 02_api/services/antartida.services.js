@@ -86,6 +86,6 @@ export default class AntartidaServices{
             expect(vel).toBeGreaterThanOrEqual(0);
             expect(vel).toBeLessThanOrEqual(200);
         });
-        console.log(`✅ JSON data for temperatura, presion and viento is realistic for ${resp.data.length} elements.`);
+        console.log(`✅ JSON data for temperatura, presion and viento is realistic for ${resp.data.length} elements (REQUIREMENT BONUS).`);
     }
 }
