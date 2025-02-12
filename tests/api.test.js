@@ -1,7 +1,7 @@
 // API tests workflows
 import {test} from '@playwright/test';
 import services from '../02_api/services/antartida.services.js';
-import utils from '../01_ui/resources/utils.js';
+import utils from '../02_api/resources/utils.js';
 
 //·H·A·P·P·Y· ·P·A·T·H·S·
 [   {fechaini: '2022-12-01T10:00:00UTC', fechafin: '2022-12-03T10:00:00UTC', estacion: '89064', respCode: 200},
