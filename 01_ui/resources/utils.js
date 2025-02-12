@@ -3,41 +3,11 @@ import { MailSlurp } from "mailslurp-client";
 import data from "./data/data";
 import axios from "axios";
 
-async function validateCaptcha(page) {
-    try {
-        const frame = await page.frameLocator('iframe[title="reCAPTCHA"]');
-        const checkbox = frame.locator('#recaptcha-anchor');
-        await checkbox.waitFor({ state: 'visible' });
-        const box = await checkbox.boundingBox();
-        if (!box) {throw new Error('❌ Couldnt retrievew boundingBox reCAPTCHA.');}
-        console.log('Found Captcha, trying user simulation...');
-        await page.mouse.move(box.x + Math.random() * box.width, box.y + Math.random() * box.height);
-        await page.waitForTimeout(Math.random() * 500 + 300);
-        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 10 });
-        await page.waitForTimeout(Math.random() * 500 + 300);
-        await checkbox.hover();
-        await page.waitForTimeout(Math.random() * 500 + 300);
-        await page.mouse.down();
-        await page.waitForTimeout(Math.random() * 150 + 100);
-        await page.mouse.up();
-        console.log('Captcha marked...');
-        await page.waitForTimeout(1000);
-        const isChecked = await checkbox.getAttribute('aria-checked');
-        if (isChecked === 'true'){console.log("🟢 CAPTCHA validated successfully.");}
-        else{
-            console.log("⛔ CAPTCHA image activated. Can't continue.");
-            throw new Error("CAPTCHA challenge appeared.");
-        }
-    } catch (err) {
-        console.error("❌ Error validando Captcha:", err.message);
-        throw err;
-    }
-}
-
 async function retrieveApiKeyFromEmail() {
     try {
         const EMAIL_BODY = await retrieveBodyFromEmail();
-        await this.deleteAllEmails();
+        await deleteAllEmails();
+        await new Promise(resolve => setTimeout(resolve, 5000));
         await createApiKey(extractLink(EMAIL_BODY));
         const EMAIL_API_KEY = await retrieveBodyFromEmail();
         return extractApiKey(EMAIL_API_KEY);
@@ -48,19 +18,38 @@ async function retrieveApiKeyFromEmail() {
 async function retrieveBodyFromEmail() {
     const mailslurp = new MailSlurp({ apiKey: data.EMAIL_API_KEY });
     const inboxId = data.INBOX_ID;
+    const timeout = 80000;
+    const pollingInterval = 5000;
+    const startTime = Date.now();
     try {
-        console.log("📬 Waiting for new email...");
-        const email = await mailslurp.waitForLatestEmail(inboxId, 80000);     
-        if (!email) {
-            throw new Error("⛔ No email received.");
+        console.log("Waiting for new email...");
+        while (Date.now() - startTime < timeout) {
+            let emails = await mailslurp.inboxController.getEmails({ inboxId });
+            if (emails && emails.length > 0) {
+                let latestEmail = emails[0];
+                console.log(`📩 Email received: ${latestEmail.subject}`);
+                let fullEmail = await mailslurp.emailController.getEmail({ emailId: latestEmail.id });
+                let attempts = 10;
+                while (!fullEmail.body && attempts > 0) {
+                    console.log(`⏳ Email body is empty. Retrying in 0.5s... (${attempts} attempts left)`);
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    fullEmail = await mailslurp.emailController.getEmail({ emailId: latestEmail.id });
+                    attempts--;
+                }
+                if (!fullEmail.body) {throw new Error(`⛔ Email body is still empty after ${attempts} retries.`);}
+                console.log("📜 Email body retrieved successfully.");
+                return fullEmail.body;
+            }
+            console.log("⏳ No new email yet, retrying in 5s...");
+            await new Promise(resolve => setTimeout(resolve, pollingInterval));
         }
-        console.log(`📩 Email received: ${email.subject}`);
-        return email.body;
+        throw new Error("⛔ No email received within timeout.");
     } catch (error) {
         console.error("⚠️ Error retrieving email:", error.message);
         throw error;
     }
 }
+
 
 
 async function deleteAllEmails() {
@@ -88,7 +77,6 @@ async function createApiKey(link){
 function extractLink(text){
     const regex = /a href='([^']+)'/;
     const resp = text.match(regex);
-    console.log(resp[1])
     return resp[1];
 }
 
@@ -103,4 +91,4 @@ function title(text){
 }
 
 
-module.exports = {validateCaptcha, retrieveApiKeyFromEmail, retrieveBodyFromEmail, createApiKey, extractApiKey, deleteAllEmails, title};
+module.exports = {retrieveApiKeyFromEmail, retrieveBodyFromEmail, createApiKey, extractApiKey, deleteAllEmails, title};
