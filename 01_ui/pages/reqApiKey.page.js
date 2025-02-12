@@ -13,14 +13,14 @@ export default class ReqApiPage{
     //----------------------------- Components from ReqApiPage
 
     static async userRegistration(page){
-        const EMAIL = await utils.retrieveInbox();
-        await this.INPUT_EMAIL(page).fill(EMAIL.emailAddress);
+        await utils.deleteAllEmails();
+        await this.INPUT_EMAIL(page).fill(data.EMAIL_ADDRESS);
         await utils.validateCaptcha(page);
         await this.BUTTON_SUBMIT(page).click();
-        
+        await expect(page.locator('span:has-text("Su petición ha sido enviada")')).toBeVisible();
         console.log('Clicked over "Enviar" button');
-        const API_KEY = await utils.retrieveApiKeyFromEmail(EMAIL);
-        console.log(`✅ Api Key retrieved from email: ${API_KEY[1]}`);
+        const API_KEY = await utils.retrieveApiKeyFromEmail();
+        console.log(`✅ Api Key retrieved from email: ${API_KEY}`);
     }
 
     static async validateUserRegistration(page){
