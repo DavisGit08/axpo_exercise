@@ -1,10 +1,13 @@
 {
   "name": "axpo_exercise",
   "version": "1.0.0",
-  "description": "Playwright exercise for Axpo interview",
+  "description": "Playwright exercises for Axpo interview",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "playwright test",
+    "ui": "playwright test tests/ui.test.js",
+    "api": "playwright test tests/api.test.js",
+    "report": "start test-results/index.html"
   },
   "repository": {
     "type": "git",
