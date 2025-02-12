@@ -16,24 +16,24 @@ async function retrieveApiKeyFromEmail() {
 }
 
 async function retrieveBodyFromEmail() {
-    const mailslurp = new MailSlurp({ apiKey: data.EMAIL_API_KEY });
+    const MAILSLURP = new MailSlurp({ apiKey: data.EMAIL_API_KEY });
     const inboxId = data.INBOX_ID;
-    const timeout = 80000;
-    const pollingInterval = 5000;
-    const startTime = Date.now();
+    const TIMEOUT = 80000;
+    const POLLING_INTERVAL = 5000;
+    const START_TIME = Date.now();
     try {
         console.log("Waiting for new email...");
-        while (Date.now() - startTime < timeout) {
-            let emails = await mailslurp.inboxController.getEmails({ inboxId });
+        while (Date.now() - START_TIME < TIMEOUT) {
+            let emails = await MAILSLURP.inboxController.getEmails({ inboxId });
             if (emails && emails.length > 0) {
                 let latestEmail = emails[0];
                 console.log(`📩 Email received: ${latestEmail.subject}`);
-                let fullEmail = await mailslurp.emailController.getEmail({ emailId: latestEmail.id });
+                let fullEmail = await MAILSLURP.emailController.getEmail({ emailId: latestEmail.id });
                 let attempts = 10;
                 while (!fullEmail.body && attempts > 0) {
                     console.log(`⏳ Email body is empty. Retrying in 0.5s... (${attempts} attempts left)`);
                     await new Promise(resolve => setTimeout(resolve, 500));
-                    fullEmail = await mailslurp.emailController.getEmail({ emailId: latestEmail.id });
+                    fullEmail = await MAILSLURP.emailController.getEmail({ emailId: latestEmail.id });
                     attempts--;
                 }
                 if (!fullEmail.body) {throw new Error(`⛔ Email body is still empty after ${attempts} retries.`);}
@@ -41,7 +41,7 @@ async function retrieveBodyFromEmail() {
                 return fullEmail.body;
             }
             console.log("⏳ No new email yet, retrying in 5s...");
-            await new Promise(resolve => setTimeout(resolve, pollingInterval));
+            await new Promise(resolve => setTimeout(resolve, POLLING_INTERVAL));
         }
         throw new Error("⛔ No email received within timeout.");
     } catch (error) {
@@ -50,13 +50,11 @@ async function retrieveBodyFromEmail() {
     }
 }
 
-
-
 async function deleteAllEmails() {
     const inboxId = data.INBOX_ID;
-    const mailslurp = new MailSlurp({ apiKey: data.EMAIL_API_KEY });
+    const MAILSLURP = new MailSlurp({ apiKey: data.EMAIL_API_KEY });
     try {
-        await mailslurp.inboxController.deleteAllInboxEmails({ inboxId });
+        await MAILSLURP.inboxController.deleteAllInboxEmails({ inboxId });
         console.log("Emails have been deleted.");
     } catch (error) {
         console.error("⚠️ Emails could not be deleted.", error);
@@ -65,9 +63,9 @@ async function deleteAllEmails() {
 
 async function createApiKey(link){
     try {
-        const response = await axios.get(link);
+        const RESP = await axios.get(link);
         console.log("API Key successfully generated and sent by email.");
-        return response.data;
+        return RESP.data;
 
     } catch (error) {
         console.error("❌ Error:", error.message); throw new Error("Failed trying to generate the API Key from link.");
@@ -75,15 +73,23 @@ async function createApiKey(link){
 }
 
 function extractLink(text){
-    const regex = /a href='([^']+)'/;
-    const resp = text.match(regex);
-    return resp[1];
+    const REGEX = /a href='([^']+)'/;
+    const RESP = text.match(REGEX);
+    return RESP[1];
 }
 
 function extractApiKey(text){
-    const regex = /'>([^']+)<\/textarea/;
-    const resp = text.match(regex);
-    return resp[1];
+    const REGEX = /'>([^']+)<\/textarea/;
+    const RESP = text.match(REGEX);
+    return RESP[1];
+}
+
+function setTestInfo(testInfo){
+    global.globalTestInfo = testInfo;
+}
+
+function getTestInfo(){
+    return global.globalTestInfo;
 }
 
 function title(text){
@@ -91,4 +97,4 @@ function title(text){
 }
 
 
-module.exports = {retrieveApiKeyFromEmail, retrieveBodyFromEmail, createApiKey, extractApiKey, deleteAllEmails, title};
+module.exports = {retrieveApiKeyFromEmail, retrieveBodyFromEmail, createApiKey, extractApiKey, deleteAllEmails, setTestInfo, getTestInfo, title};

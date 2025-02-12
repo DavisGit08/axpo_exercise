@@ -13,10 +13,12 @@ export default class InitPage{
     static async openAemet(page){
         for (let attempt = 1; attempt <= 5; attempt++) {
             try{
+                // Open page
                 await page.goto(data.URL, {timeout: 10000});
                 console.log('Page loaded successfully: ' + data.URL);
                 break;
             }catch(err){
+                // If filed, try again
                 console.error("Error trying to open page: " + err)
                 if (attempt < 5) {
                     console.log("🔄 Retrying again...");
