@@ -37,7 +37,7 @@ async function retrieveBodyFromEmail() {
                     attempts--;
                 }
                 if (!fullEmail.body) {throw new Error(`⛔ Email body is still empty after ${attempts} retries.`);}
-                console.log("📜 Email body retrieved successfully.");
+                console.log("Email body retrieved successfully.");
                 return fullEmail.body;
             }
             console.log("⏳ No new email yet, retrying in 5s...");

@@ -1,13 +1,6 @@
 import { test } from '@playwright/test';
+import { setTestInfo } from './utils';
 
-test.beforeAll(async () => {
-
-});
-
-test.beforeEach(async () => {
-
-});
-
-test.afterAll(async () => {
-
+test.beforeEach(async({}, testInfo) => {
+    setTestInfo(testInfo);
 });

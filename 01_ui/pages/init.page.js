@@ -11,8 +11,21 @@ export default class InitPage{
     //----------------------------- Components from InitPage
 
     static async openAemet(page){
-        await page.goto(data.URL);
-        console.log('Opened browser and page opened: ' + data.URL);
+        for (let attempt = 1; attempt <= 5; attempt++) {
+            try{
+                await page.goto(data.URL, {timeout: 10000});
+                console.log('Page loaded successfully: ' + data.URL);
+                break;
+            }catch(err){
+                console.error("Error trying to open page: " + err)
+                if (attempt < 5) {
+                    console.log("🔄 Retrying again...");
+                    await page.waitForTimeout(100);
+                } else {
+                    throw new Error("🚨 Could not open AEMET after 5 retries to open AEMET website.");
+                }
+            }
+        }
     }
 
     static async requestApiKey(page){
