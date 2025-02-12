@@ -95,3 +95,6 @@ Requirements bonus:
     📜 Use dynamic data: Instead of relying on hardcoded data.
     📜 Being more flexible on assetions.
 
+Data encryption:
+  - I've added AES encryption for API KEY in api requests.
+  - Email api key, Email address and inbox id are not encrypted because of running out of time, but it should be encrypted.
